@@ -5,6 +5,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # Podscript
 
+[![REUSE status](https://api.reuse.software/badge/github.com/mikkel-bergmann/podscript)](https://api.reuse.software/info/github.com/mikkel-bergmann/podscript)
+
 A declarative, plain-text language for producing podcasts from a single script — speech,
 music beds, sound effects, fades, and ducking — that compiles deterministically to a
 finished audio file.
@@ -28,6 +30,20 @@ Sam's narration beginning exactly as the fade starts and continuing over the tai
 
 > **This repository is the specification**, its conformance suite, and examples — not an
 > implementation. The normative document is [`docs/SPEC.md`](docs/SPEC.md).
+
+## Writing Podscript with an LLM
+
+Podscript is built for this: a model (or a person) *writes* the script, and the renderer
+turns it into identical audio every time. To have an LLM author scripts, give it the
+**[authoring cheatsheet](docs/AUTHORING.md)** — a single, self-contained guide to the whole
+syntax — then describe your episode in plain prose:
+
+> *Paste [`docs/AUTHORING.md`](docs/AUTHORING.md) into your model (or point your agent /
+> editor at it), then ask: "Write a 2-minute news-recap cold open for hosts Sam and Alex,
+> with an intro music bed that ducks under the voices and fades out."*
+
+The cheatsheet is dense enough to fit in context and complete enough to produce valid
+files. [`llms.txt`](llms.txt) is a machine-readable index of the repo's docs for AI tools.
 
 ## Why a language
 

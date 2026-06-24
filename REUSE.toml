@@ -15,6 +15,7 @@ path = [
   "REUSE.toml",
   "mise.toml",
   ".gitignore",
+  "llms.txt",
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Mikkel Bergmann"

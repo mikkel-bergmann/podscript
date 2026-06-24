@@ -1,0 +1,23 @@
+# Podscript
+
+> Podscript is a declarative, plain-text language for producing podcasts from a single script — speech, music beds, sound effects, fades, and ducking — that compiles deterministically to a finished audio file. This repository is the specification, its conformance suite, and examples; not an implementation. To generate a `.podscript` file, read the authoring cheatsheet, then write the file; for exact semantics, consult the specification.
+
+## Docs
+
+- [Authoring cheatsheet](docs/AUTHORING.md): compact, self-contained guide to the whole syntax — the file to read before writing a `.podscript`.
+- [Specification](docs/SPEC.md): the normative v0.1 spec — grammar, timing model, gain/duck/fade semantics, the IR, determinism, extensibility, security.
+- [Glossary](docs/GLOSSARY.md): audio production terms (bed, duck, sting, LUFS) and how they map to the language.
+- [README](README.md): overview and project orientation.
+
+## Examples
+
+- [cold_open.podscript](examples/cold_open.podscript): a canonical multi-scene script (intro bed, fade, duck, crossfade, labels, forward anchor).
+
+## Conformance
+
+- [conformance/](conformance/): golden fixtures an implementation is tested against — `parse/*` (script → AST) and `resolve/*` (script + durations → IR).
+
+## Optional
+
+- [Licensing](LICENSE.md): spec and fixtures are CC BY 4.0; reference implementations are published separately under Apache-2.0.
+- [Naming policy](TRADEMARK.md): use of the "Podscript" name.
