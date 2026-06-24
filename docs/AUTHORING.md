@@ -15,6 +15,7 @@ is [`SPEC.md`](SPEC.md). When something here is unclear or unstated, follow `SPE
 
 ## Minimal example
 
+<!-- example: examples/minimal.podscript -->
 ```podscript
 podscript: "0.1"
 
@@ -190,8 +191,16 @@ just labels and do **not** reset time. You only place things relationally:
 
 ## A fuller example
 
+This is the repo's canonical [`examples/cold_open.podscript`](../examples/cold_open.podscript) verbatim:
+
+<!-- example: examples/cold_open.podscript -->
 ```podscript
 podscript: "0.1"
+
+# cold_open.podscript — canonical example
+#
+# Intro music plays at -3 dB, fades out over 4s starting at 8s, and Sam's
+# narration begins exactly as the fade starts (overlapping the fading tail).
 
 meta:
   title: "Episode 12 — The Thing"
@@ -219,6 +228,7 @@ scene main:
   alex (skeptical): Does it, though?
 
 scene outro:
+  # outro music segues in over the intro bed and plays out under the sign-off
   bed outro gain -6db crossfade 2s fade-out over 3s at signoff.end
   sam: That's all for this week — thanks for listening.   #signoff
 ```

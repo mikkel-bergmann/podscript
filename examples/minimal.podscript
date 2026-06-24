@@ -1,0 +1,14 @@
+podscript: "0.1"
+
+voices:
+  host:  { voice: Adam,   preset: host }
+  guest: { voice: Rachel, preset: warm-host }
+
+assets:
+  theme: music/theme.mp3 once
+
+scene open:
+  bed theme gain -4db duck-under speech to -15db fade-out over 3s at 12s
+  host: Welcome back to the show — I'm here with our guest.
+  guest (warm): Thanks for having me.
+  host: Let's get into it.
