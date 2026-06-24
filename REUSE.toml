@@ -1,0 +1,21 @@
+version = 1
+
+# Licensing for files that can't carry an inline SPDX header — JSON conformance
+# fixtures (no comments), `.podscript` inputs (a version stamp must be line 1), and
+# project metadata. The marquee prose (docs/, README.md) carries its own SPDX header.
+# Full license texts live in LICENSES/. See LICENSE.md for the human summary.
+
+[[annotations]]
+path = [
+  "conformance/**",
+  "examples/**",
+  "openspec/**",
+  "LICENSE.md",
+  "TRADEMARK.md",
+  "REUSE.toml",
+  "mise.toml",
+  ".gitignore",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Mikkel Bergmann"
+SPDX-License-Identifier = "CC-BY-4.0"

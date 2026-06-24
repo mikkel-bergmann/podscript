@@ -1,0 +1,37 @@
+{
+  "podscript": "0.1",
+  "meta": {},
+  "pronounce": {
+    "Seibold": "SY-bold",
+    "Foran": "FORR-an",
+    "Dee Why": "Dee Why"
+  },
+  "clips": [
+    {
+      "id": "c1",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "start": 0.0,
+      "dur": 4.2,
+      "end": 4.2,
+      "content": [
+        {
+          "kind": "text",
+          "value": "Seibold was ousted, and "
+        },
+        {
+          "kind": "pronounce",
+          "value": "lead",
+          "say": "led"
+        },
+        {
+          "kind": "text",
+          "value": " pipes turned up near Dee Why."
+        }
+      ]
+    }
+  ],
+  "beds": [],
+  "oneshots": []
+}

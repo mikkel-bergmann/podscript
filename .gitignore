@@ -1,0 +1,7 @@
+# OS / editor cruft
+.DS_Store
+*.swp
+*~
+
+# Local Claude Code agent tooling (not part of the spec deliverable)
+.claude/

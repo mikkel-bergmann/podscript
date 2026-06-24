@@ -1,0 +1,44 @@
+{
+  "podscript": "0.1",
+  "meta": {},
+  "requires": [],
+  "voices": {
+    "sam": {
+      "voice": "Adam",
+      "preset": "host"
+    }
+  },
+  "assets": {},
+  "scenes": [
+    {
+      "kind": "scene",
+      "name": "news",
+      "body": [
+        {
+          "kind": "speech",
+          "speaker": "sam",
+          "content": [
+            {
+              "kind": "text",
+              "value": "Seibold was ousted, and "
+            },
+            {
+              "kind": "pronounce",
+              "value": "lead",
+              "say": "led"
+            },
+            {
+              "kind": "text",
+              "value": " pipes turned up near Dee Why."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pronounce": {
+    "Seibold": "SY-bold",
+    "Foran": "FORR-an",
+    "Dee Why": "Dee Why"
+  }
+}

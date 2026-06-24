@@ -1,0 +1,12 @@
+podscript: "0.1"
+
+voices:
+  sam: { voice: Adam, preset: host }
+
+pronounce:
+  Seibold: "SY-bold"
+  Foran: "FORR-an"
+  "Dee Why": "Dee Why"
+
+scene news:
+  sam: Seibold was ousted, and {say "lead" as "led"} pipes turned up near Dee Why.

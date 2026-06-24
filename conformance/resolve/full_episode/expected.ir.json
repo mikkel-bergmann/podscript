@@ -1,0 +1,122 @@
+{
+  "podscript": "0.1",
+  "meta": {
+    "title": "Episode 12 — The Thing",
+    "lufs": -16,
+    "true_peak": -1
+  },
+  "clips": [
+    {
+      "id": "c1",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "start": 8.0,
+      "dur": 6.5,
+      "end": 14.5,
+      "content": [
+        { "kind": "text", "value": "Hey everyone — welcome to the show. Today we're " },
+        { "kind": "emphasis", "value": "digging in" },
+        { "kind": "break" }
+      ],
+      "anchor": { "rel": "with", "ref": "b1", "event": "fade-out" }
+    },
+    {
+      "id": "c2",
+      "track": "speech",
+      "voice": "alex",
+      "preset": "warm-host",
+      "start": 14.75,
+      "dur": 2.3,
+      "end": 17.05,
+      "content": [
+        { "kind": "break" },
+        { "kind": "text", "value": "and it's a strange one." }
+      ]
+    },
+    {
+      "id": "c3",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "start": 17.3,
+      "dur": 2.8,
+      "end": 20.1,
+      "content": [
+        { "kind": "text", "value": "So here's where it gets interesting." }
+      ]
+    },
+    {
+      "id": "c4",
+      "track": "speech",
+      "voice": "alex",
+      "preset": "warm-host",
+      "direction": "skeptical",
+      "start": 20.35,
+      "dur": 1.2,
+      "end": 21.55,
+      "content": [
+        { "kind": "text", "value": "Does it, though?" }
+      ]
+    },
+    {
+      "id": "c5",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "start": 21.8,
+      "dur": 3.2,
+      "end": 25.0,
+      "content": [
+        { "kind": "text", "value": "That's all for this week — thanks for listening." }
+      ]
+    }
+  ],
+  "beds": [
+    {
+      "id": "b1",
+      "src": "intro",
+      "track": "music",
+      "start": 0.0,
+      "end": 12.0,
+      "gain_db": -3,
+      "loop": false,
+      "automation": [
+        { "src": "fade", "t": 8.0, "dir": "out", "dur": 4.0, "to_db": "-inf" }
+      ],
+      "events": { "start": 0.0, "fade-out": 8.0, "end": 12.0 }
+    },
+    {
+      "id": "b2",
+      "src": "intro",
+      "track": "music",
+      "start": 17.05,
+      "end": 23.55,
+      "gain_db": -8,
+      "loop": false,
+      "automation": [
+        { "src": "fade", "t": 17.05, "dir": "in", "dur": 1.0 },
+        { "src": "duck", "track": "speech", "to_db": -18, "attack_ms": 60, "release_ms": 350 },
+        { "src": "crossfade", "t": 21.55, "dir": "out", "dur": 2.0, "to_db": "-inf" }
+      ],
+      "events": { "start": 17.05, "fade-in": 17.05, "fade-out": 21.55, "end": 23.55 }
+    },
+    {
+      "id": "b3",
+      "src": "outro",
+      "track": "music",
+      "start": 21.55,
+      "end": 28.0,
+      "gain_db": -6,
+      "loop": false,
+      "automation": [
+        { "src": "crossfade", "t": 21.55, "dir": "in", "dur": 2.0 },
+        { "src": "fade", "t": 25.0, "dir": "out", "dur": 3.0, "to_db": "-inf" }
+      ],
+      "events": { "start": 21.55, "fade-in": 21.55, "fade-out": 25.0, "end": 28.0 }
+    }
+  ],
+  "oneshots": [
+    { "id": "s1", "src": "whoosh", "at": 17.05, "dur": 0.6, "end": 17.65 }
+  ]
+}

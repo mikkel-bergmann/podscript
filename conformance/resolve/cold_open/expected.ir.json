@@ -1,0 +1,56 @@
+{
+  "podscript": "0.1",
+  "meta": {
+    "title": "Episode 12 — The Thing",
+    "lufs": -16,
+    "true_peak": -1
+  },
+  "clips": [
+    {
+      "id": "c1",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "start": 8.0,
+      "dur": 6.5,
+      "end": 14.5,
+      "content": [
+        { "kind": "text", "value": "Hey everyone — welcome to the show. Today we're " },
+        { "kind": "emphasis", "value": "digging in" },
+        { "kind": "break" }
+      ],
+      "anchor": { "rel": "with", "ref": "b1", "event": "fade-out" }
+    },
+    {
+      "id": "c2",
+      "track": "speech",
+      "voice": "alex",
+      "preset": "warm-host",
+      "start": 14.75,
+      "dur": 2.3,
+      "end": 17.05,
+      "content": [
+        { "kind": "break" },
+        { "kind": "text", "value": "and it's a strange one." }
+      ]
+    }
+  ],
+  "beds": [
+    {
+      "id": "b1",
+      "src": "intro",
+      "track": "music",
+      "start": 0.0,
+      "end": 12.0,
+      "gain_db": -3,
+      "loop": false,
+      "automation": [
+        { "src": "fade", "t": 8.0, "dir": "out", "dur": 4.0, "to_db": "-inf" }
+      ],
+      "events": { "start": 0.0, "fade-out": 8.0, "end": 12.0 }
+    }
+  ],
+  "oneshots": [
+    { "id": "s1", "src": "whoosh", "at": 17.05 }
+  ]
+}

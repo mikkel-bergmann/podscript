@@ -1,0 +1,15 @@
+{
+  "_comment": "Durations supplied to the resolver, in milliseconds. Speech keyed by clip id; assets by asset id.",
+  "clips": {
+    "c1": 6500,
+    "c2": 2300,
+    "c3": 2800,
+    "c4": 1200,
+    "c5": 3200
+  },
+  "assets": {
+    "intro": 30000,
+    "outro": 30000,
+    "whoosh": 600
+  }
+}

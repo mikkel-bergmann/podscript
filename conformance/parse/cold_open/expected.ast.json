@@ -1,0 +1,63 @@
+{
+  "podscript": "0.1",
+  "meta": {
+    "title": "Episode 12 — The Thing",
+    "lufs": -16,
+    "true_peak": -1
+  },
+  "requires": [],
+  "voices": {
+    "sam":  { "voice": "Adam",   "preset": "host" },
+    "alex": { "voice": "Rachel", "preset": "warm-host" }
+  },
+  "assets": {
+    "intro":  { "path": "music/intro_theme.mp3", "loop": "once" },
+    "whoosh": { "path": "sfx/whoosh_01.wav" }
+  },
+  "scenes": [
+    {
+      "kind": "scene",
+      "name": "cold_open",
+      "body": [
+        {
+          "kind": "directive",
+          "verb": "bed",
+          "target": { "kind": "ident", "name": "intro" },
+          "clauses": [
+            { "kind": "gain", "db": -3 },
+            { "kind": "fade", "dir": "out", "seconds": 4, "at": { "seconds": 8 } }
+          ],
+          "label": "music"
+        },
+        {
+          "kind": "speech",
+          "speaker": "sam",
+          "cue": [
+            { "kind": "anchor", "rel": "with", "ref": "intro", "event": "fade-out" }
+          ],
+          "content": [
+            { "kind": "text", "value": "Hey everyone — welcome to the show. Today we're " },
+            { "kind": "emphasis", "value": "digging in" },
+            { "kind": "break" }
+          ]
+        },
+        {
+          "kind": "speech",
+          "speaker": "alex",
+          "content": [
+            { "kind": "break" },
+            { "kind": "text", "value": "and it's a strange one." }
+          ]
+        },
+        {
+          "kind": "directive",
+          "verb": "sfx",
+          "target": { "kind": "ident", "name": "whoosh" },
+          "clauses": [
+            { "kind": "anchor", "rel": "after", "ref": "alex" }
+          ]
+        }
+      ]
+    }
+  ]
+}

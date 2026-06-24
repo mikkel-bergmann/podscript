@@ -1,0 +1,35 @@
+podscript: "0.1"
+
+# Full multi-scene episode: exercises continuous cross-scene timeline,
+# bed lifetime across scenes, duck-under-speech, and a cross-scene crossfade
+# with a forward-anchored fade-out.
+
+meta:
+  title: "Episode 12 — The Thing"
+  lufs: -16
+  true_peak: -1
+
+voices:
+  sam:  { voice: Adam,   preset: host }
+  alex: { voice: Rachel, preset: warm-host }
+
+assets:
+  intro:  music/intro_theme.mp3  once
+  outro:  music/outro_theme.mp3  once
+  whoosh: sfx/whoosh_01.wav
+
+scene cold_open:
+  bed intro gain -3db fade-out over 4s at 8s        #music
+  sam [with intro.fade-out]: Hey everyone — welcome to the show. Today we're *digging in*...
+  alex: ...and it's a strange one.
+  sfx whoosh after alex
+
+scene main:
+  bed intro gain -8db fade-in over 1s duck-under speech to -18db
+  sam: So here's where it gets interesting.
+  alex (skeptical): Does it, though?
+
+scene outro:
+  # outro music segues in over the intro bed and plays out under the sign-off
+  bed outro gain -6db crossfade 2s fade-out over 3s at signoff.end
+  sam: That's all for this week — thanks for listening.   #signoff

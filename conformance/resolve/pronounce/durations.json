@@ -1,0 +1,7 @@
+{
+  "_comment": "Durations supplied to the resolver, in milliseconds, standing in for TTS + ffprobe. Speech keyed by clip id; assets by asset id.",
+  "clips": {
+    "c1": 4200
+  },
+  "assets": {}
+}
