@@ -38,6 +38,8 @@ renderer) and MUST pass every fixture for each class it claims.
 | `resolve` | `full_episode` | the above plus: continuous cross-scene timeline, bed placement at the playhead, bed lifetime across scenes, two instances of one asset, `duck-under speech` (declarative), and a cross-scene `crossfade` paired with a forward-anchored (`at signoff.end`) fade-out |
 | `parse` | `pronounce` | `pronounce:` header lexicon (quoted multi-word term), inline `{say "X" as "Y"}` pronunciation node alongside emphasis/break (§2.5, §3.1) |
 | `resolve` | `pronounce` | `pronounce` map copied to the IR root; speech `content` (incl. the inline `pronounce` node) preserved verbatim with original spelling; timing unaffected |
+| `parse` | `prosody` | voice-level `prosody: { rate, pitch }` baseline object and per-line `prosody rate/pitch/volume` clauses in the speech `cue` (§2.3, §5.5); pitch parsed from semitones (`-1st` → `-1`); a voice without `prosody` omits it |
+| `resolve` | `prosody` | per-attribute effective-prosody merge onto the clip (line clause overrides voice baseline attribute-by-attribute; attributes at their natural default and the empty object omitted); prosody is synthesis metadata and does not perturb `start`/`dur`/`end` |
 
 The semantic questions the multi-scene episode raised — multi-scene timing, bed
 lifetime/placement, cross-scene crossfade, duck envelope, and how to add automation

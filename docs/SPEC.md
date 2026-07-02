@@ -3,15 +3,17 @@ SPDX-FileCopyrightText: 2026 Mikkel Bergmann
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# Podscript Specification — v0.1
+# Podscript Specification — v0.2.0
 
 This is the specification of the Podscript language for declaratively producing
 podcasts: lexical structure, grammar, AST, semantics (anchors, two-pass resolution,
 the gain model), the resolved IR schema, and the conformance, determinism,
 extensibility, and security rules an implementation must follow.
 
-**Status:** v0.1 — first public draft. The grammar and IR are stable; normative
-sections (§13–§21) are open for implementer feedback before v1.0.
+**Status:** v0.2.0 — the grammar and IR are stable; normative sections (§13–§21) are
+open for implementer feedback before v1.0. This version adds the prosody model (§5.5) as
+a backward-compatible (minor) addition over v0.1; see [`CHANGELOG.md`](../CHANGELOG.md).
+The spec follows [Semantic Versioning](https://semver.org/) (§20).
 
 **License:** This specification text is licensed **CC BY 4.0**. A reference
 implementation, when published, is licensed separately (Apache-2.0). See §21.
@@ -65,11 +67,16 @@ those conformance classes individually (§13).
 The first non-blank, non-comment line of a script MUST be a version declaration:
 
 ```
-podscript: "0.1"
+podscript: "0.2.0"
 ```
 
-An engine MUST refuse a script whose declared major/minor version it does not
-implement, with a clear error, rather than attempt a best-effort parse.
+The value is a **semantic version** (`MAJOR.MINOR.PATCH`, §20). The `PATCH` component
+MAY be omitted and defaults to `0`, so `0.1` and `0.1.0` are equivalent. A script MUST
+declare a version that supports every feature it uses (a script using prosody, added in
+`0.2.0`, MUST declare at least `0.2.0`); authoring against the current version is always
+valid. An engine matches on `MAJOR.MINOR` — `PATCH` differences are always compatible —
+and MUST refuse a script whose `MAJOR.MINOR` it does not implement, with a clear error,
+rather than attempt a best-effort parse.
 
 ### 1.3 Indentation and blocks
 
@@ -100,6 +107,7 @@ IDENT      := [A-Za-z_][A-Za-z0-9_-]*
 NUMBER     := -?[0-9]+ ("." [0-9]+)?     # decimal point is always "." (locale-independent)
 DURATION   := NUMBER ("s" | "ms")
 DB         := NUMBER "db"            # case-insensitive; "-6db", "-18dB"
+SEMITONES  := ("+" | "-") NUMBER "st"   # signed pitch shift, e.g. +2st, -1st
 TIMECODE   := NUMBER ":" NUMBER ("." NUMBER)?   # m:ss(.ms), e.g. 0:23, 1:04.5
               | DURATION                          # e.g. 8s, also accepted
 ```
@@ -165,11 +173,20 @@ voice_field := "voice" ":" IDENT            # provider voice name/id
              | "provider" ":" IDENT         # default: project default
              | "preset" ":" IDENT           # named DSP chain (see §7)
              | "style" ":" IDENT            # provider style/emotion hint
+             | "prosody" ":" prosody_obj    # baseline delivery: rate/pitch/volume (§5.5)
+
+prosody_obj := "{" prosody_kv ("," prosody_kv)* "}"
+prosody_kv  := "rate" ":" NUMBER            # speaking-rate multiplier; 1.0 = natural
+             | "pitch" ":" SEMITONES        # baseline pitch shift, e.g. +2st, -1st
+             | "volume" ":" NUMBER          # vocal-intensity multiplier; 1.0 = natural
 ```
 
 The `IDENT` before the colon is the **speaker id** used in speech lines and
 anchors. A voice MAY also carry a `language` field (BCP 47 tag, e.g. `en-US`,
-`da-DK`) to select the synthesis language; see §19.
+`da-DK`) to select the synthesis language; see §19. The optional `prosody` object
+sets the speaker's **baseline delivery** — its habitual `rate`, `pitch`, and
+`volume` (§5.5); a per-line `prosody` clause (§5.5) overrides it per attribute.
+Prosody is advisory synthesis guidance (§5.5), not a mix or timing control.
 
 ### 2.4 `assets`
 
@@ -240,7 +257,8 @@ direction  := "(" WORDS ")"                     # delivery direction → TTS pro
 - **`cue` `[ … ]`** — timing/engineering clauses (same clause grammar as directives,
   §5). This is how a speech line carries an anchor without polluting the spoken text.
 - **`direction` `( … )`** — a human-language delivery note (e.g. `(skeptical)`,
-  `(warm)`), passed to the TTS engine as a style/prosody hint. Not timing.
+  `(warm)`), passed to the TTS engine as the emotional/attitudinal prosody hint (§5.5).
+  Not timing.
 - **`TEXT`** — the spoken words. This is the *only* freeform text in the language.
   It is stored as a typed `content` array of inline nodes (§3.1), not a raw string.
 - **`label`** — optional `#name` to make this clip referenceable by anchors (§6).
@@ -257,7 +275,10 @@ markup:
 {say "lead" as "led"} → a Pronounce node: speak the first word as the second
 ```
 
-Anything else is `Text`. Inline markup is optional; plain prose is valid.
+Anything else is `Text`. Inline markup is optional; plain prose is valid. Emphasis and
+breaks are the inline prosodic controls — word-level stress and phrasing/rhythm
+respectively; the continuous prosody attributes (rate, pitch, volume) and the full
+prosody model are in §5.5.
 
 A **Pronounce** node respells one occurrence of a word for the synthesis engine
 (`{say "<written>" as "<spoken>"}`). It overrides the `pronounce` header lexicon
@@ -334,7 +355,7 @@ set**: `sfx whoosh after sam gain -3db` ≡ `sfx whoosh gain -3db after sam`. Ea
 clause *kind* may appear at most once per line (a duplicate is a validation error).
 
 ```ebnf
-clause   := anchor | gain | fade | crossfade | duck | at | loopmode
+clause   := anchor | gain | fade | crossfade | duck | at | loopmode | prosody
 
 anchor    := ("after" | "with" | "before") ref offset?
 ref       := IDENT ("." event)?         # clip id, speaker, or asset event
@@ -347,9 +368,14 @@ crossfade := "crossfade" DURATION ("at" anchor_or_time)?
 duck      := "duck-under" IDENT ("to" DB)? ("attack" DURATION)? ("release" DURATION)?
 at        := "at" TIMECODE              # absolute placement (escape hatch)
 loopmode  := "loop" | "once"
+prosody   := "prosody" prosody_attr+    # one or more delivery attributes (§5.5)
+prosody_attr := "rate" NUMBER | "pitch" SEMITONES | "volume" NUMBER
 
 anchor_or_time := anchor | TIMECODE
 ```
+
+A `prosody` clause is only meaningful on a speech `cue`; it is **advisory synthesis**
+guidance, not a timing or mix directive (see §5.5).
 
 ### 5.1 Anchors (`after` / `with` / `before`)
 
@@ -421,6 +447,53 @@ linearly over `release_ms` after the region end. Overlapping or near-adjacent
 regions whose ramps would intersect are merged so the bed does not bob back up
 between them. This duck envelope is one of the envelopes combined under §9's
 `base + min(...)` rule.
+
+### 5.5 Prosody (delivery)
+
+**Prosody** is the suprasegmental shape of speech — the properties of syllables and
+larger units rather than the individual phonemes. Podscript models it along the
+dimensions listed below; the three *continuous* ones are set with the `prosody` control
+(a voice-level baseline, §2.3, or a per-line `cue` clause), and the rest are expressed
+with constructs defined elsewhere in this spec.
+
+| Prosodic dimension (acoustic correlate) | Podscript control |
+|---|---|
+| **Rate** — tempo / duration | `prosody rate <n>` — multiplier, `1.0` = natural |
+| **Pitch** — fundamental frequency, baseline intonation | `prosody pitch <±n>st` — semitone shift |
+| **Volume** — intensity / vocal effort | `prosody volume <n>` — multiplier, `1.0` = natural |
+| **Stress / focus / emphasis** — prominence | `*word*` emphasis inline (§3.1) |
+| **Rhythm / pausing** — phrasing, chunking | `...` and `{break <dur>}` (§3.1) |
+| **Intonation contour** — sentence type (question / statement) | sentence punctuation in the spoken text |
+| **Emotional / attitudinal / voice quality** — timbre, affect | `(direction)` delivery note (§3) |
+
+`prosody volume` is **vocal intensity** (how forcefully the voice speaks — which also
+changes timbre), **not** a mix level: post-synthesis level is the `gain` clause (§5, §9)
+in dB. Overall loudness of a finished line is therefore two independent things — how the
+voice performs (`volume`) and where its fader sits (`gain`).
+
+A voice-level `prosody` object (§2.3) sets a speaker's habitual delivery; a per-line
+`prosody` clause **overrides it per attribute** (a line that sets only `pitch` keeps the
+voice's baseline `rate`). Attributes left unset fall back to the voice baseline, then to
+the natural default (`rate 1.0`, `pitch +0st`, `volume 1.0`).
+
+Prosody is a **synthesis** concern, not a timing one. It changes the speech audio the
+provider returns (and therefore a clip's measured duration), but it is **not** an input
+to anchor resolution or the gain model: the resolver takes clip durations as supplied
+input (§8), so a `prosody` clause never alters `start`/`dur`/`end`. The resolver carries
+the resolved **effective** prosody onto the clip (§11.1); the renderer applies each
+attribute to the provider's corresponding control, **clamping** to the provider's
+supported range and recording the effective (post-clamp) values in the render manifest
+(§14.3). Because prosody changes the returned audio, it is part of the synthesis cache
+key (§14.3).
+
+Prosody is **advisory**, and this is a deliberate exception to the fail-closed rule
+(§15.4): the three continuous attributes are **core** vocabulary (no `requires`), but an
+engine applies only what its provider supports and MAY drop an attribute it cannot honour
+(recording what it applied). Unlike a dropped `duck` or `fade`, an unhonoured prosody hint
+degrades *expressiveness*, not *mix correctness* — the same best-effort contract as
+`(direction)`. Rate is honoured by essentially every engine; pitch and volume vary more.
+Podscript models a per-utterance envelope only; finer, within-line variation is authored
+by splitting a line into consecutive cues, each with its own prosody.
 
 ---
 
@@ -504,8 +577,9 @@ interface Script {
   scenes:   Scene[]
 }
 interface Requirement { ns: string; optional: boolean }
-interface Voice  { voice?: string; provider?: string; preset?: string; style?: string; language?: string }
+interface Voice  { voice?: string; provider?: string; preset?: string; style?: string; language?: string; prosody?: Prosody }
 interface Asset  { path: string; loop?: "loop" | "once" }
+interface Prosody { rate?: number; pitch?: number; volume?: number }   // pitch in semitones; §5.5
 ```
 
 ```ts
@@ -541,6 +615,7 @@ type Clause =
   | { kind: "duck";      track: string; toDb?: number; attackMs?: number; releaseMs?: number }
   | { kind: "at";     seconds: number }
   | { kind: "loop";   mode: "loop" | "once" }
+  | { kind: "prosody"; rate?: number; pitch?: number; volume?: number }  // delivery (§5.5); speech cue only; pitch in semitones
 
 type Event  = "start" | "end" | "fade-in" | "fade-out"
 type Inline = { kind: "text"; value: string }
@@ -572,12 +647,13 @@ and by any future tooling (visual timeline, preview renderer).
 
 ```jsonc
 {
-  "podscript": "0.1",
+  "podscript": "0.2.0",
   "meta": { "title": "…", "lufs": -16, "true_peak": -1 },
   "pronounce": { "Seibold": "SY-bold" },   // term → respelling (§2.5); omitted when absent
   "clips": [
     {
       "id": "c1", "track": "speech", "voice": "sam", "preset": "host",
+      "prosody": { "rate": 1.1, "pitch": -1 },
       "start": 8.0, "dur": 6.5, "end": 14.5,
       "content": [ { "kind": "text", "value": "…" } ],
       "anchor": { "rel": "with", "ref": "b1", "event": "fade-out" }
@@ -624,6 +700,13 @@ and by any future tooling (visual timeline, preview renderer).
   the IR root verbatim and omitted when absent. It is applied at synthesis time, so
   speech clips' `content` retains the original spelling (inline `pronounce` nodes,
   §3.1, are preserved within `content`); timing and resolution are unaffected.
+- **Effective prosody.** A speech clip carries a `prosody` object (§5.5) holding the
+  resolved delivery attributes, merged **per attribute**: the line's `prosody` clause
+  value if present, else the speaker's voice-level `prosody` baseline (§2.3). Each
+  attribute is **omitted at its natural default** (`rate 1.0`, `pitch 0`, `volume 1.0`),
+  and the whole `prosody` object is omitted when no attribute remains. `pitch` is in
+  semitones. Prosody is synthesis metadata and does not affect timing, so
+  `start`/`dur`/`end` are identical whether or not `prosody` is present.
 - **Bed end.** A `fade-out` to `-inf` sets the bed's `end` to the moment the fade
   completes. Otherwise a bed ends at `start + asset_duration` (or where explicitly
   cut). `loop: true` beds have no intrinsic end and MUST be bounded by a fade or cut.
@@ -732,7 +815,7 @@ recording everything outside the script that affected the output:
 
 ```jsonc
 {
-  "podscript": "0.1",
+  "podscript": "0.2.0",
   "engine": { "name": "…", "version": "…" },
   "voices": { "sam": { "provider": "elevenlabs", "model": "…", "version": "…", "seed": 42 } },
   "assets": { "intro": { "sha256": "…", "dur_ms": 30000 } },
@@ -741,8 +824,10 @@ recording everything outside the script that affected the output:
 ```
 
 Speech SHOULD be cached by a content hash of `(text, voice, provider, model,
-version, params)`; a cache hit MUST return byte-identical audio. Given a script plus
-its manifest and cache, a re-render MUST reproduce the prior output.
+version, prosody, params)`; a cache hit MUST return byte-identical audio. The effective
+prosody (§5.5 — `rate`, `pitch`, `volume`) is part of the key because it changes the
+returned audio, and its post-clamp values are recorded per voice in the manifest. Given a
+script plus its manifest and cache, a re-render MUST reproduce the prior output.
 
 ---
 
@@ -866,10 +951,12 @@ form (`X`).
 
 ## 20. Versioning and governance
 
-- The spec is versioned with **semantic versioning**. A change that alters the
+- The spec is versioned with **[Semantic Versioning](https://semver.org/)**
+  (`MAJOR.MINOR.PATCH`). **The current version is 0.2.0.** A change that alters the
   meaning of an existing valid script, or any golden conformance fixture, is a
-  **major** change. Additive, backward-compatible features are **minor**.
-  Clarifications are **patch**.
+  **major** change. Additive, backward-compatible features are **minor** (0.2.0 added
+  the prosody model, §5.5, over 0.1). Clarifications are **patch**. Every release is
+  recorded in [`CHANGELOG.md`](../CHANGELOG.md).
 - Scripts declare the version they target (§1.2); engines refuse versions they do
   not implement.
 - Core keyword additions, IR schema changes, and the extension-namespace registry are

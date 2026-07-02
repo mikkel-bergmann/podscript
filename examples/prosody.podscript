@@ -1,0 +1,17 @@
+podscript: "0.2.0"
+
+# prosody.podscript — controlling delivery
+#
+# Prosody is *how* a line is spoken. Sam has a brisk, slightly low baseline;
+# individual lines override rate / pitch / volume. Within-sentence variation is
+# authored as consecutive cues, each with its own prosody.
+
+voices:
+  sam:  { voice: Adam,   preset: host, prosody: { rate: 1.1, pitch: -1st } }
+  alex: { voice: Rachel, preset: warm-host }
+
+scene demo:
+  sam: Normal delivery for the setup — this uses Sam's baseline.
+  sam [prosody rate 1.35 pitch +3st volume 1.2] (excited): Wait — it actually *worked*!
+  sam [prosody rate 0.9]: ...which, if you think about it, changes everything.
+  alex (skeptical): Does it, though?

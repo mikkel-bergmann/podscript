@@ -1,4 +1,4 @@
-podscript: "0.1"
+podscript: "0.2.0"
 
 voices:
   sam: { voice: Adam, preset: host }

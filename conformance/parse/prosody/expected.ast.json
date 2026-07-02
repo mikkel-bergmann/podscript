@@ -1,0 +1,90 @@
+{
+  "podscript": "0.2.0",
+  "meta": {},
+  "requires": [],
+  "voices": {
+    "sam": {
+      "voice": "Adam",
+      "preset": "host",
+      "prosody": {
+        "rate": 1.1,
+        "pitch": -1
+      }
+    },
+    "alex": {
+      "voice": "Rachel",
+      "preset": "warm-host"
+    }
+  },
+  "assets": {},
+  "scenes": [
+    {
+      "kind": "scene",
+      "name": "chat",
+      "body": [
+        {
+          "kind": "speech",
+          "speaker": "sam",
+          "content": [
+            {
+              "kind": "text",
+              "value": "This is my normal quicker cadence."
+            }
+          ]
+        },
+        {
+          "kind": "speech",
+          "speaker": "sam",
+          "cue": [
+            {
+              "kind": "prosody",
+              "rate": 1.35,
+              "pitch": 3,
+              "volume": 1.2
+            }
+          ],
+          "content": [
+            {
+              "kind": "text",
+              "value": "Wait, it actually "
+            },
+            {
+              "kind": "emphasis",
+              "value": "worked"
+            },
+            {
+              "kind": "text",
+              "value": "!"
+            }
+          ]
+        },
+        {
+          "kind": "speech",
+          "speaker": "alex",
+          "cue": [
+            {
+              "kind": "prosody",
+              "rate": 0.9
+            }
+          ],
+          "content": [
+            {
+              "kind": "text",
+              "value": "Slow and steady over here."
+            }
+          ]
+        },
+        {
+          "kind": "speech",
+          "speaker": "alex",
+          "content": [
+            {
+              "kind": "text",
+              "value": "And back to normal."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

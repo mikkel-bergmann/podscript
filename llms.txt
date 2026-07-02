@@ -5,13 +5,14 @@
 ## Docs
 
 - [Authoring cheatsheet](docs/AUTHORING.md): compact, self-contained guide to the whole syntax — the file to read before writing a `.podscript`.
-- [Specification](docs/SPEC.md): the normative v0.1 spec — grammar, timing model, gain/duck/fade semantics, the IR, determinism, extensibility, security.
+- [Specification](docs/SPEC.md): the normative v0.2.0 spec — grammar, timing model, gain/duck/fade semantics, prosody, the IR, determinism, extensibility, security.
 - [Glossary](docs/GLOSSARY.md): audio production terms (bed, duck, sting, LUFS) and how they map to the language.
 - [README](README.md): overview and project orientation.
 
 ## Examples
 
 - [cold_open.podscript](examples/cold_open.podscript): a canonical multi-scene script (intro bed, fade, duck, crossfade, labels, forward anchor).
+- [prosody.podscript](examples/prosody.podscript): controlling delivery — per-voice baseline and per-line rate/pitch/volume, with emphasis and direction.
 
 ## Conformance
 
