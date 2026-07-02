@@ -1,0 +1,11 @@
+podscript: "0.2.0"
+
+voices:
+  sam:  { voice: Adam, preset: host, prosody: { rate: 1.1, pitch: -1st } }
+  alex: { voice: Rachel, preset: warm-host }
+
+scene chat:
+  sam: This is my normal quicker cadence.
+  sam [prosody rate 1.35 pitch +3st volume 1.2]: Wait, it actually *worked*!
+  alex [prosody rate 0.9]: Slow and steady over here.
+  alex: And back to normal.

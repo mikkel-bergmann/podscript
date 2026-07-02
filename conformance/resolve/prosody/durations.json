@@ -1,0 +1,10 @@
+{
+  "_comment": "Durations supplied to the resolver, in milliseconds, standing in for TTS + ffprobe. Speech keyed by clip id; assets by asset id. Prosody does not affect resolution, so these are the measured clip lengths regardless of any rate/pitch/volume.",
+  "clips": {
+    "c1": 3000,
+    "c2": 1800,
+    "c3": 2600,
+    "c4": 1500
+  },
+  "assets": {}
+}

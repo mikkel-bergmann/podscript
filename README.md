@@ -12,7 +12,7 @@ music beds, sound effects, fades, and ducking — that compiles deterministicall
 finished audio file.
 
 ```podscript
-podscript: "0.1"
+podscript: "0.2.0"
 
 voices:
   sam: { voice: Adam, preset: host }
@@ -69,7 +69,7 @@ and any renderer. Source → IR → audio.
 
 ## The specification
 
-[`docs/SPEC.md`](docs/SPEC.md) is the normative v0.1 specification: lexical grammar,
+[`docs/SPEC.md`](docs/SPEC.md) is the normative v0.2.0 specification: lexical grammar,
 speakers and voices, cues and directions, the gain / duck / fade model, the relational
 timing model, the IR schema, determinism, extensibility, security, and transcript export.
 This README is informative; where they differ, the spec wins. Domain terms (bed, duck,
@@ -91,7 +91,9 @@ provider-dependent and reproducible only when pinned via a render manifest.
 ## Examples
 
 [`examples/`](examples/) holds runnable sample scripts, including
-[`cold_open.podscript`](examples/cold_open.podscript).
+[`cold_open.podscript`](examples/cold_open.podscript) and
+[`prosody.podscript`](examples/prosody.podscript) (controlling delivery — rate, pitch,
+volume, emphasis).
 
 ## Implementations
 

@@ -1,4 +1,4 @@
-podscript: "0.1"
+podscript: "0.2.0"
 
 # Full multi-scene episode: exercises continuous cross-scene timeline,
 # bed lifetime across scenes, duck-under-speech, and a cross-scene crossfade

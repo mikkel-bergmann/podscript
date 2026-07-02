@@ -9,15 +9,16 @@ This is a compact, self-contained guide to writing a valid `.podscript` file. It
 intended to be pasted into a model's context. It is **informative**; the normative source
 is [`SPEC.md`](SPEC.md). When something here is unclear or unstated, follow `SPEC.md`.
 
-**Golden rule:** the output must *parse*. The first non-blank, non-comment line is always
-`podscript: "0.1"`. Every speaker must be declared in `voices:`; every asset referenced by
+**Golden rule:** the output must *parse*. The first non-blank, non-comment line is always the
+version stamp — `podscript: "0.2.0"` (the current version). Every speaker must be declared in
+`voices:`; every asset referenced by
 `bed`/`sfx` must be declared in `assets:`. Levels are in dB; times carry a unit (`s`/`ms`).
 
 ## Minimal example
 
 <!-- example: examples/minimal.podscript -->
 ```podscript
-podscript: "0.1"
+podscript: "0.2.0"
 
 voices:
   host:  { voice: Adam,   preset: host }
@@ -43,7 +44,7 @@ A file is a version line, then optional header blocks **in any order**, then one
 `scene` blocks. Indent block bodies by 2 spaces.
 
 ```podscript
-podscript: "0.1"
+podscript: "0.2.0"
 
 # Comments are whole-line only — a line whose first character is '#'. (A '#' after
 # text is a label, not a comment; see Speech lines.) Blank lines are ignored.
@@ -76,8 +77,9 @@ Block-by-block:
 - `meta:` (optional) — `title`, `description`, `lufs` (loudness target, default −16),
   `true_peak` (dBTP ceiling, default −1).
 - `voices:` (required if there's dialogue) — `speaker-id: { fields }`. Fields: `voice`
-  (required), `provider`, `preset`, `style`, `language`. The speaker-id is what you use on
-  dialogue lines.
+  (required), `provider`, `preset`, `style`, `language`, `prosody`. The speaker-id is what
+  you use on dialogue lines. `prosody: { rate, pitch, volume }` sets the speaker's baseline
+  delivery (e.g. `prosody: { rate: 1.1, pitch: -1st }`); see *Prosody* below.
 - `assets:` (required if any `bed`/`sfx` is used) — `id: path [loop|once]` (default `once`).
 - `pronounce:` (optional) — `term: "respelling"`; quote keys that contain spaces or
   punctuation (e.g. `"Dee Why"`).
@@ -142,6 +144,7 @@ Clauses (each at most once per directive/cue, order-independent):
 | At | `at 8s` / `at 0:23` / `at signoff.end+3s` | Place at an absolute time or an anchor. |
 | Loop | `loop` / `once` | Override the asset's default repeat behaviour. |
 | Anchor | `after <ref>` / `with <ref>` / `before <ref>` | Relative placement (see below). |
+| Prosody | `prosody rate 1.15 pitch +2st volume 1.1` | Speech-only: delivery for this line — any of `rate`/`pitch`/`volume` (`1.0`/`+0st` = natural). |
 
 Units are required: levels end in `db`, durations in `s` or `ms`, timecodes are `8s`,
 `500ms`, or `M:SS(.ms)` like `0:23`.
@@ -164,9 +167,81 @@ just labels and do **not** reset time. You only place things relationally:
 - A **bed** with no anchor starts at the current playhead and plays until it's faded out,
   replaced by the next bed, or its file ends; beds span scenes.
 
+## Prosody
+
+**Prosody** is *how* a line is spoken — the delivery on top of the words. Every prosody
+control is a hint to the voice engine and never touches timing: the mix is unchanged, only
+the speech audio differs. Podscript covers the full range of prosody with a mix of the
+`prosody` control and a few constructs you've already seen:
+
+| Prosodic dimension | Write it as |
+|---|---|
+| **Rate** (tempo) | `prosody rate 1.15` — multiplier, `1.0` = natural |
+| **Pitch** (baseline) | `prosody pitch +2st` / `-1st` — semitone shift |
+| **Volume** (vocal effort) | `prosody volume 1.2` — multiplier; *not* the mix level (`gain`) |
+| **Emphasis** (stress on a word) | `*word*` inside the text |
+| **Pauses** (rhythm) | `...` (a beat) or `{break 500ms}` (exact) |
+| **Question vs statement** (intonation) | sentence punctuation — `?` `.` `!` |
+| **Emotion / attitude** | `(direction)` — e.g. `(excited)`, `(somber)` |
+
+The three continuous knobs (`rate`, `pitch`, `volume`) travel together in one `prosody`
+control. Set a **baseline** on the voice for a character's habitual delivery, and
+**override any attribute per line** (unset attributes keep the baseline):
+
+```podscript
+voices:
+  sam: { voice: Adam, preset: host, prosody: { rate: 1.1, pitch: -1st } }  # Sam: brisk, low
+
+scene chat:
+  sam: Normal delivery for the setup.
+  sam [prosody rate 1.35 pitch +3st volume 1.2]: Wait — it actually *worked*!   # this line pops
+  sam [prosody rate 0.9]: ...which, if you think about it, changes everything.   # keeps pitch -1st
+```
+
+`(direction)` is a free-text emotional note; any words work and the engine maps what it can.
+A small, consistent vocabulary keeps LLM-authored scripts predictable: `excited`, `measured`,
+`urgent`, `warm`, `deadpan`, `skeptical`, `somber`.
+
+**Within a sentence, some parts different from others?** There is no per-word prosody — real
+voice engines don't expose one. Author it by **splitting the thought into consecutive cues**,
+each with its own prosody; the speech spine chains them tightly:
+
+```podscript
+sam (measured): So here's the thing.
+sam [prosody rate 1.3 pitch +2st] (excited): It actually worked, first try, no changes!
+```
+
+**Portability note:** engines honour what they can and drop the rest — `rate` works almost
+everywhere; `pitch`/`volume` vary. On engines that don't take fine markup (e.g. ElevenLabs,
+which reads punctuation and bracketed audio tags rather than SSML), emphasis, pauses, and
+punctuation still land, because they map onto cues the engine already understands.
+
+Putting it together — the repo's [`examples/prosody.podscript`](../examples/prosody.podscript):
+
+<!-- example: examples/prosody.podscript -->
+```podscript
+podscript: "0.2.0"
+
+# prosody.podscript — controlling delivery
+#
+# Prosody is *how* a line is spoken. Sam has a brisk, slightly low baseline;
+# individual lines override rate / pitch / volume. Within-sentence variation is
+# authored as consecutive cues, each with its own prosody.
+
+voices:
+  sam:  { voice: Adam,   preset: host, prosody: { rate: 1.1, pitch: -1st } }
+  alex: { voice: Rachel, preset: warm-host }
+
+scene demo:
+  sam: Normal delivery for the setup — this uses Sam's baseline.
+  sam [prosody rate 1.35 pitch +3st volume 1.2] (excited): Wait — it actually *worked*!
+  sam [prosody rate 0.9]: ...which, if you think about it, changes everything.
+  alex (skeptical): Does it, though?
+```
+
 ## Hard rules (break these and the file won't compile)
 
-1. `podscript: "0.1"` is the first line.
+1. A version stamp is the first line — `podscript: "0.2.0"` (the current version).
 2. Every speaker appears in `voices:`; every `bed`/`sfx` asset appears in `assets:`.
 3. Levels carry `db`; durations carry `s`/`ms`; timecodes carry a unit. No bare numbers.
 4. Identifiers (speaker/asset/label names) are ASCII: `[A-Za-z_][A-Za-z0-9_-]*`.
@@ -195,7 +270,7 @@ This is the repo's canonical [`examples/cold_open.podscript`](../examples/cold_o
 
 <!-- example: examples/cold_open.podscript -->
 ```podscript
-podscript: "0.1"
+podscript: "0.2.0"
 
 # cold_open.podscript — canonical example
 #

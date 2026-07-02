@@ -1,0 +1,88 @@
+{
+  "podscript": "0.2.0",
+  "meta": {},
+  "clips": [
+    {
+      "id": "c1",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "prosody": {
+        "rate": 1.1,
+        "pitch": -1
+      },
+      "start": 0.0,
+      "dur": 3.0,
+      "end": 3.0,
+      "content": [
+        {
+          "kind": "text",
+          "value": "This is my normal quicker cadence."
+        }
+      ]
+    },
+    {
+      "id": "c2",
+      "track": "speech",
+      "voice": "sam",
+      "preset": "host",
+      "prosody": {
+        "rate": 1.35,
+        "pitch": 3,
+        "volume": 1.2
+      },
+      "start": 3.25,
+      "dur": 1.8,
+      "end": 5.05,
+      "content": [
+        {
+          "kind": "text",
+          "value": "Wait, it actually "
+        },
+        {
+          "kind": "emphasis",
+          "value": "worked"
+        },
+        {
+          "kind": "text",
+          "value": "!"
+        }
+      ]
+    },
+    {
+      "id": "c3",
+      "track": "speech",
+      "voice": "alex",
+      "preset": "warm-host",
+      "prosody": {
+        "rate": 0.9
+      },
+      "start": 5.3,
+      "dur": 2.6,
+      "end": 7.9,
+      "content": [
+        {
+          "kind": "text",
+          "value": "Slow and steady over here."
+        }
+      ]
+    },
+    {
+      "id": "c4",
+      "track": "speech",
+      "voice": "alex",
+      "preset": "warm-host",
+      "start": 8.15,
+      "dur": 1.5,
+      "end": 9.65,
+      "content": [
+        {
+          "kind": "text",
+          "value": "And back to normal."
+        }
+      ]
+    }
+  ],
+  "beds": [],
+  "oneshots": []
+}
