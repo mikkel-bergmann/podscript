@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 Mikkel Bergmann
+# SPDX-License-Identifier: MIT
+
+# build + deps
+node_modules/
+dist/
+.astro/
+
+# generated public asset (single-sourced from ../../llms.txt by scripts/sync-docs.mjs)
+public/llms.txt
+
+# generated docs pages (single-sourced from ../docs, ../CHANGELOG.md, ../examples
+# by scripts/sync-docs.mjs). index.mdx is hand-written and committed.
+src/content/docs/reference/
+src/content/docs/guide/
+src/content/docs/examples.md
+src/content/docs/changelog.md

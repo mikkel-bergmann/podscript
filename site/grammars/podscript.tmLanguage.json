@@ -1,0 +1,67 @@
+{
+  "name": "podscript",
+  "displayName": "Podscript",
+  "scopeName": "source.podscript",
+  "aliases": ["pod"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#version" },
+    { "include": "#blocks" },
+    { "include": "#directives" },
+    { "include": "#clauses" },
+    { "include": "#inline" },
+    { "include": "#label" },
+    { "include": "#string" },
+    { "include": "#number" }
+  ],
+  "repository": {
+    "comment": {
+      "match": "^\\s*#.*$",
+      "name": "comment.line.number-sign.podscript"
+    },
+    "version": {
+      "match": "^(podscript)\\s*(:)",
+      "captures": {
+        "1": { "name": "keyword.control.podscript" },
+        "2": { "name": "punctuation.separator.podscript" }
+      }
+    },
+    "blocks": {
+      "match": "^\\s*(meta|voices|assets|pronounce)\\s*(:)",
+      "captures": {
+        "1": { "name": "keyword.control.section.podscript" },
+        "2": { "name": "punctuation.separator.podscript" }
+      }
+    },
+    "directives": {
+      "match": "^\\s*(scene)\\b|\\b(bed|music|ambience|atmos|sfx|sting|pause)\\b",
+      "captures": {
+        "1": { "name": "keyword.control.scene.podscript" },
+        "2": { "name": "support.function.directive.podscript" }
+      }
+    },
+    "clauses": {
+      "match": "\\b(gain|fade-in|fade-out|crossfade|duck-under|prosody|after|with|before|at|loop|once|over|to|attack|release|rate|pitch|volume|style|preset|provider|language|voice|say|as|break)\\b",
+      "name": "keyword.other.clause.podscript"
+    },
+    "inline": {
+      "patterns": [
+        { "match": "\\*[^*\\n]+\\*", "name": "markup.bold.emphasis.podscript" },
+        { "match": "\\{[^}\\n]*\\}", "name": "meta.inline.brace.podscript" },
+        { "match": "\\.\\.\\.", "name": "punctuation.definition.break.podscript" }
+      ]
+    },
+    "label": {
+      "match": "#[A-Za-z_][A-Za-z0-9_-]*",
+      "name": "entity.name.tag.label.podscript"
+    },
+    "string": {
+      "match": "\"[^\"\\n]*\"",
+      "name": "string.quoted.double.podscript"
+    },
+    "number": {
+      "match": "[+-]?\\b\\d+(\\.\\d+)?(db|ms|s|st)?\\b",
+      "name": "constant.numeric.podscript"
+    }
+  }
+}
