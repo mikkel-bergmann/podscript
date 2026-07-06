@@ -20,3 +20,12 @@ path = [
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2026 Mikkel Bergmann"
 SPDX-License-Identifier = "CC-BY-4.0"
+
+# The website (site/) is software/tooling — MIT. Covers committed files that can't
+# carry an inline SPDX header (JSON, package-lock, MDX); source files that do carry a
+# header agree with this. Generated + dependency files are gitignored, so unscanned.
+[[annotations]]
+path = ["site/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Mikkel Bergmann"
+SPDX-License-Identifier = "MIT"

@@ -1,0 +1,65 @@
+---
+title: Podscript
+description: Podcasts as code — write your episode as one plain-text file and compile it to identical audio every time.
+template: splash
+hero:
+  tagline: Podcasts as code.
+  actions:
+    - text: Get started
+      link: /podscript/guide/authoring/
+      icon: right-arrow
+      variant: primary
+    - text: Read the spec
+      link: /podscript/reference/spec/
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/mikkel-bergmann/podscript
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Write your whole episode as one plain-text file. Podscript compiles it — speech, music
+beds, sound effects, fades, and ducking — into the same finished audio every time.
+
+```podscript
+podscript: "0.2.0"
+
+voices:
+  sam: { voice: Adam, preset: host }
+
+assets:
+  intro: music/intro_theme.mp3
+
+scene cold_open:
+  bed intro gain -3db fade-out over 4s at 8s
+  sam [with intro.fade-out]: Hey everyone — welcome to the show. Today we're digging into...
+```
+
+That renders intro music at −3 dB, fading out over four seconds starting at 8s, with Sam's
+narration beginning exactly as the fade starts and continuing over the tail.
+
+<CardGrid>
+  <Card title="Generation vs. rendering" icon="seti:default">
+    A produced podcast is normally three disconnected stages — scripting, text-to-speech,
+    mixing. Podscript draws a hard line: an LLM or a person *writes* the script
+    (non-deterministic); Podscript *compiles* it to identical audio every run (deterministic).
+  </Card>
+  <Card title="Timing is relational" icon="setting">
+    You never write timestamps for fades, effects, or ducking — a spoken line's length isn't
+    known until it's synthesized. You describe timing by relationship ("as the fade begins",
+    "after Sam", "under the speech") and the compiler resolves it to absolute time.
+  </Card>
+  <Card title="Written by LLMs or people" icon="pencil">
+    The syntax is dense enough to fit in an LLM's context and robust to both human typing and
+    machine generation. Describe an episode in prose; the model writes a valid script.
+  </Card>
+  <Card title="Diff-able & reproducible" icon="approve-check">
+    One human-readable, version-controllable file. It carries no behavioural logic — it
+    describes a fixed production, so the output stays reproducible, diff-able, and debuggable.
+  </Card>
+</CardGrid>
+
+> **This project is the specification**, its conformance suite, and examples — not an
+> implementation. The normative document is the [specification](/podscript/reference/spec/).

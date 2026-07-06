@@ -1,0 +1,19 @@
+{
+  "name": "podscript-site",
+  "type": "module",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "sync": "node scripts/sync-docs.mjs",
+    "predev": "npm run sync",
+    "dev": "astro dev",
+    "prebuild": "npm run sync",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.34.0",
+    "astro": "^5.6.0",
+    "sharp": "^0.33.5"
+  }
+}
