@@ -1,0 +1,54 @@
+/* SPDX-FileCopyrightText: 2026 Mikkel Bergmann */
+/* SPDX-License-Identifier: MIT */
+
+/* Brand accent — Podscript purple (#8844ae). Starlight's :root is the dark theme.
+   In dark mode, accent *text* (links, active nav, etc.) is white, not lavender-pink;
+   the mid purple is kept only for backgrounds/borders/focus. */
+:root {
+	--sl-color-accent-low: #341a47;
+	--sl-color-accent: #9a52c9;
+	--sl-color-accent-high: #ffffff;
+	--sl-color-text-accent: #ffffff;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #f0e2f9;
+	--sl-color-accent: #8844ae;
+	--sl-color-accent-high: #401a58;
+}
+
+/* Header site title: white (adapts to near-black in light mode), not accent-tinted. */
+.site-title {
+	color: var(--sl-color-white) !important;
+}
+
+/* Primary hero button: solid white on the dark hero (dark text); brand purple in light mode. */
+.action.primary {
+	background: #ffffff !important;
+	border-color: #ffffff !important;
+	color: #1c1917 !important;
+}
+.action.primary:hover {
+	background: #e6e6e6 !important;
+	border-color: #e6e6e6 !important;
+}
+:root[data-theme='light'] .action.primary {
+	background: #8844ae !important;
+	border-color: #8844ae !important;
+	color: #ffffff !important;
+}
+:root[data-theme='light'] .action.primary:hover {
+	background: #75389a !important;
+	border-color: #75389a !important;
+}
+
+/* Search (Pagefind): highlight the matched terms in yellow instead of bold. */
+.pagefind-ui__result-excerpt mark,
+.pagefind-ui mark,
+dialog[aria-label='Search'] mark {
+	background-color: #fde047 !important;
+	color: #1c1917 !important;
+	font-weight: 600;
+	border-radius: 0.15em;
+	padding: 0 0.12em;
+}

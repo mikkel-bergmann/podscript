@@ -21,7 +21,9 @@ export default defineConfig({
     starlight({
       title: 'Podscript',
       description: 'Podcasts as code — write your episode as one plain-text file and compile it to identical audio every time.',
+      logo: { src: './src/assets/logo.svg', alt: 'Podscript' },
       favicon: '/favicon.svg',
+      customCss: ['./src/styles/theme.css'],
       social: [{ icon: 'github', label: 'GitHub', href: GITHUB }],
       // No editLink: pages are generated from ../docs by scripts/sync-docs.mjs, so a
       // per-page edit URL would point at a gitignored file. Edit the canonical docs/ instead.
