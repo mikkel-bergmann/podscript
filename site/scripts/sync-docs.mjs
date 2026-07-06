@@ -12,8 +12,9 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 // Keep in sync with `base` in astro.config.mjs. In-content markdown links are not
-// base-prefixed by Astro, so we bake the base into internal links here.
-const BASE = '/podscript';
+// base-prefixed by Astro, so we bake the base into internal links here. Empty for
+// the custom domain (served at root); '/podscript' for project GitHub Pages.
+const BASE = '';
 const GITHUB = 'https://github.com/mikkel-bergmann/podscript';
 
 /** Drop a leading SPDX HTML-comment header, if present. */
