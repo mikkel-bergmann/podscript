@@ -1,0 +1,15 @@
+/* SPDX-FileCopyrightText: 2026 Mikkel Bergmann */
+/* SPDX-License-Identifier: MIT */
+
+/* Brand accent — Podscript purple (#8844ae). Starlight's :root is the dark theme. */
+:root {
+	--sl-color-accent-low: #341a47;
+	--sl-color-accent: #9a52c9;
+	--sl-color-accent-high: #e7cff6;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #f0e2f9;
+	--sl-color-accent: #8844ae;
+	--sl-color-accent-high: #401a58;
+}
