@@ -14,10 +14,9 @@ const GITHUB = 'https://github.com/mikkel-bergmann/podscript';
 
 // https://astro.build/config
 export default defineConfig({
-  // Project GitHub Pages: served under /podscript. If a custom domain is added
-  // later, drop `base` (and update BASE in scripts/sync-docs.mjs) and add a CNAME.
-  site: 'https://mikkel-bergmann.github.io',
-  base: '/podscript',
+  // Served at the root of the custom domain (site/public/CNAME). If you ever revert
+  // to project GitHub Pages, set base: '/podscript' and BASE in scripts/sync-docs.mjs.
+  site: 'https://podscript.dev',
   integrations: [
     starlight({
       title: 'Podscript',
